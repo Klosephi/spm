@@ -1,0 +1,85 @@
+grammar org.pklose.simplespec.Simplespec with org.eclipse.xtext.common.Terminals
+
+generate simplespec "http://www.org.pklose.simplespec/Simplespec"
+
+Model:
+	elements += Element
+;
+
+Element:
+	EnumDeclaration | Diagram | Domain 
+;
+
+Import: 'Import' importedNamespace=FqnWithWildCard;
+
+FqnWithWildCard: FQN('.*')?;
+
+Diagram:	
+	 imports += Import*
+	'Diagram' name = ID '{'	
+		includes += Include*		
+	 '}'
+;
+
+Include:
+	'Include' entity = [Entity|FQN] ('with' '{'
+			fields += [Property|FQN]*
+		'}')?
+;
+
+EnumDeclaration:
+	'Enumeration' name = ID '{'
+		values += ID ("," ID)*		
+	'}'
+;
+
+FQN: ID ("." ID)*;
+
+
+
+
+Entity:
+	'Entity' name = ID '{'
+		properties += Property*
+	'}'
+;
+
+Domain:
+	imports += Import*
+	'Domain' name = ID 'Description: ' description = STRING '{'
+	    entities += Entity+
+	 '}'
+;
+
+Property:
+	Field | Association
+;
+
+
+Association:
+	 'Relation' multiplicity = Multiplicty name = ID ':' type = [Entity|FQN]
+;
+
+Multiplicty:
+	'1..N' | '0..N' | '1' | '1..0'  
+;
+
+
+
+Field:
+	'Field' name = ID ':' literal = Literal;
+
+Literal:
+	{Literal} 'Decimal' | {Literal} 'Geld' | {Literal} 'Text' |{Literal} 'Boolean' |{Literal} 'Int' | Enum
+;
+
+Enum:
+	'Enum' type = [EnumDeclaration]
+;
+
+
+
+
+
+
+
