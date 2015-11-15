@@ -1,20 +1,31 @@
 package org.pklose.simplespec.generator
 
-import org.pklose.simplespec.simplespec.Entity
+import org.pklose.simplespec.simplespec.Diagram
 import org.pklose.simplespec.simplespec.Field
 
 class JSClassesGenerator {
+
+/*
+ * Diagram Personen {
+	Include Geschaeftspartner with {
+		Geschaeftspartner.Name
+	}
 	
-	
-	def public String generateClasses (Iterable<Entity> entities) {
+	Include Gruppe with {
+		Gruppe.Gruppenummer
+	}
+}
+ */	
+	def public String generateClasses (Diagram diagram) {		
+		
 		return '''
 		var classes = {
-			«FOR entity : entities»
-				«entity.name» : new uml.Interface ({
+			«FOR include : diagram.includes»
+				«include.entity.name» : new uml.Interface ({
 					position: { x:300 ,y:50},
 					size: { width: 240, height: 100 },	
 					name: 'Mammal',
-					attributes:[«FOR attribute : entity.properties.filter(typeof(Field))»
+					attributes:[«FOR attribute : include.fields.filter(typeof(Field))»
 						'«attribute.name»: «attribute.literal»'
 					«ENDFOR»
 					attrs: {

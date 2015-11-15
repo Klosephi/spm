@@ -1,5 +1,6 @@
 package org.pklose.tests;
 
+import com.google.common.collect.Iterables;
 import javax.inject.Inject;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
@@ -9,13 +10,13 @@ import org.eclipse.xtext.junit4.util.ParseHelper;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pklose.simplespec.SimplespecInjectorProvider;
 import org.pklose.simplespec.generator.JSClassesGenerator;
-import org.pklose.simplespec.simplespec.Domain;
+import org.pklose.simplespec.simplespec.Diagram;
 import org.pklose.simplespec.simplespec.Element;
-import org.pklose.simplespec.simplespec.Entity;
 import org.pklose.simplespec.simplespec.Model;
 
 @RunWith(XtextRunner.class)
@@ -26,8 +27,10 @@ public class JSClassesGeneratorTest {
   @Extension
   private ParseHelper<Model> _parseHelper;
   
-  @Test
-  public void createTestClass() {
+  private Model diagModel;
+  
+  @Before
+  public void prepareTest() {
     try {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("Domain Person Description: \"Domain enthält alle Partner Daten\" {");
@@ -63,15 +66,51 @@ public class JSClassesGeneratorTest {
       _builder.newLine();
       _builder.append("}");
       _builder.newLine();
-      final Model model = this._parseHelper.parse(_builder);
-      EList<Element> _elements = model.getElements();
-      Element _head = IterableExtensions.<Element>head(_elements);
-      final EList<Entity> entities = ((Domain) _head).getEntities();
-      final JSClassesGenerator generator = new JSClassesGenerator();
-      final String code = generator.generateClasses(entities);
-      code.length();
+      final Model tmpModel = this._parseHelper.parse(_builder);
+      StringConcatenation _builder_1 = new StringConcatenation();
+      _builder_1.append("\t\t");
+      _builder_1.newLine();
+      _builder_1.append("Import Person.*");
+      _builder_1.newLine();
+      _builder_1.newLine();
+      _builder_1.append("Diagram Personen {");
+      _builder_1.newLine();
+      _builder_1.append("\t");
+      _builder_1.append("Include Geschaeftspartner with {");
+      _builder_1.newLine();
+      _builder_1.append("\t\t");
+      _builder_1.append("Geschaeftspartner.Name");
+      _builder_1.newLine();
+      _builder_1.append("\t");
+      _builder_1.append("}");
+      _builder_1.newLine();
+      _builder_1.append("\t");
+      _builder_1.newLine();
+      _builder_1.append("\t");
+      _builder_1.append("Include Gruppe with {");
+      _builder_1.newLine();
+      _builder_1.append("\t\t");
+      _builder_1.append("Gruppe.Gruppenummer");
+      _builder_1.newLine();
+      _builder_1.append("\t");
+      _builder_1.append("}");
+      _builder_1.newLine();
+      _builder_1.append("}");
+      _builder_1.newLine();
+      Model _parse = this._parseHelper.parse(_builder_1);
+      this.diagModel = _parse;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  @Test
+  public void createTestClass() {
+    EList<Element> _elements = this.diagModel.getElements();
+    Iterable<Diagram> _filter = Iterables.<Diagram>filter(_elements, Diagram.class);
+    final Diagram diagram = IterableExtensions.<Diagram>head(_filter);
+    final JSClassesGenerator generator = new JSClassesGenerator();
+    final String code = generator.generateClasses(diagram);
+    code.length();
   }
 }
