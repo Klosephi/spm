@@ -24,7 +24,7 @@ class JSClassesGenerator {
 				«include.entity.name» : new uml.Interface ({
 					position: { x:300 ,y:50},
 					size: { width: 240, height: 100 },	
-					name: 'Mammal',
+					name: '«include.entity.name»',
 					attributes:[«FOR attribute : include.fields.filter(typeof(Field))»
 						'«attribute.name»: «attribute.literal»'
 					«ENDFOR»
