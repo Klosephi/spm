@@ -28,7 +28,7 @@ public class LanguageTests {
   public void testDomain() {
     try {
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append("Domain Person Description: \"Domain enthält alle Partner Daten\" {");
+      _builder.append("Domain Person Description: \"Domain enthï¿½lt alle Partner Daten\" {");
       _builder.newLine();
       _builder.append("\t");
       _builder.newLine();

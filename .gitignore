@@ -1,6 +1,4 @@
 dsl/org.pklose.ui/bin/
-*.project
-*.classpath
 dsl/org.pklose/.antlr-generator-3.2.0.jar
 dsl/org.pklose/.antlr-generator-3.2.0-patch.jar
 *.xtendbin
